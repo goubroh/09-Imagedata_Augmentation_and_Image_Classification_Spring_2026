@@ -1,6 +1,7 @@
 # 09-Imagedata_Augmentation_and_Image_Classification_Spring_2026
 
-Image Data Augmentation and Image Classification (Spring 2026)
+
+Image Data Augmentation and Image Classification (IDEAS TIH Internship Project Spring 2026)
 
 This repository contains a step-by-step implementation of basic **image processing**, **data augmentation**, and **image loading pipelines** using **OpenCV**, **NumPy**, and **PyTorch**.  
 The work follows an academic assignment format and demonstrates practical understanding of computer vision and deep learning data preparation.
