@@ -1,0 +1,32 @@
+# Image Data Augmentation and Image Classification
+
+Spring Internship Program 2026  
+IDEAS-TIH, Indian Statistical Institute, Kolkata  
+
+## 📌 Project Overview
+This project demonstrates:
+
+- Image loading using OpenCV
+- Grayscale conversion
+- Image transformation (shift, resize, rotate)
+- Dataset download and extraction
+- PyTorch ImageFolder dataset creation
+- DataLoader creation
+- Data augmentation pipeline
+- Batch visualization
+
+## 🛠 Technologies Used
+- Python
+- OpenCV
+- NumPy
+- PyTorch
+- Torchvision
+- Matplotlib
+
+## 📂 Dataset
+Cat and Dog dataset from Udacity:
+https://s3.amazonaws.com/content.udacity-data.com/nd089/Cat_Dog_data.zip
+
+## ▶️ How to Run
+
+1. Install dependencies:
