@@ -1,0 +1,150 @@
+# ==============================================
+# Image Data Augmentation and Classification
+# ==============================================
+
+# ---------- Question 1: Import Libraries and Load Image ----------
+import numpy as np
+import cv2
+import gdown
+import requests
+import zipfile
+import os
+import torch
+import matplotlib.pyplot as plt
+
+from torchvision import transforms, datasets
+from torch.utils.data import DataLoader
+
+print("\n===== Question 1: Load Image =====")
+
+file_id = '1oxjO8sVvjO7552kciqyIPz9_h2KiGupq'
+output_path = 'moon-pexels-frank-cone.jpg'
+
+gdown.download(id=file_id, output=output_path, quiet=False)
+
+original_image = cv2.imread(output_path)
+
+if original_image is not None:
+    print("Original Image Shape:", original_image.shape)
+else:
+    print("Error loading image")
+
+# ---------- Question 2: Convert to Grayscale ----------
+print("\n===== Question 2: Convert to Grayscale =====")
+
+grayscale_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+print("Grayscale Image Shape:", grayscale_image.shape)
+
+# ---------- Question 3: Save Grayscale Image ----------
+print("\n===== Question 3: Save Grayscale Image =====")
+
+cv2.imwrite('graymoon.jpg', grayscale_image)
+print("Grayscale image saved as graymoon.jpg")
+
+# ---------- Question 4: Shift Image ----------
+print("\n===== Question 4: Shift Image =====")
+
+M = np.float32([[1, 0, 50],
+                [0, 1, 100]])
+
+height, width = original_image.shape[:2]
+shifted_image = cv2.warpAffine(original_image, M, (width, height))
+
+print("Shifted Image Shape:", shifted_image.shape)
+
+# ---------- Question 5: Resize Image ----------
+print("\n===== Question 5: Resize Image =====")
+
+resized_image = cv2.resize(original_image, (150, 100))
+print("Resized Image Shape:", resized_image.shape)
+
+# ---------- Question 6: Rotate Image ----------
+print("\n===== Question 6: Rotate Image =====")
+
+center = (width // 2, height // 2)
+rotation_matrix = cv2.getRotationMatrix2D(center, 90, 1.0)
+
+rotated_image = cv2.warpAffine(original_image, rotation_matrix, (height, width))
+print("Rotated Image Shape:", rotated_image.shape)
+
+# ---------- Question 7: Download Cat/Dog Dataset ----------
+print("\n===== Question 7: Download Dataset =====")
+
+url = "https://s3.amazonaws.com/content.udacity-data.com/nd089/Cat_Dog_data.zip"
+zip_path = "Cat_Dog_data.zip"
+output_dir = "Cat_Dog_data"
+
+response = requests.get(url)
+with open(zip_path, "wb") as f:
+    f.write(response.content)
+
+print("Dataset downloaded.")
+
+with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    zip_ref.extractall(output_dir)
+
+print("Dataset extracted.")
+
+os.remove(zip_path)
+print("Zip file removed.")
+
+# ---------- Question 8: Transform Pipeline ----------
+print("\n===== Question 8: Transform Pipeline =====")
+
+train_transform = transforms.Compose([
+    transforms.Resize((255, 255)),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor()
+])
+
+print("Transform pipeline created.")
+
+# ---------- Question 9: Create ImageFolder Dataset ----------
+print("\n===== Question 9: Create Dataset =====")
+
+train_data_dir = "Cat_Dog_data/Cat_Dog_data/train"
+
+train_dataset = datasets.ImageFolder(
+    root=train_data_dir,
+    transform=train_transform
+)
+
+print("Total training images:", len(train_dataset))
+
+# ---------- Question 10: Create DataLoader ----------
+print("\n===== Question 10: Create DataLoader =====")
+
+train_loader = DataLoader(
+    train_dataset,
+    batch_size=64,
+    shuffle=True
+)
+
+images, labels = next(iter(train_loader))
+
+print("Image Batch Shape:", images.shape)
+print("Label Batch Shape:", labels.shape)
+
+# ---------- Visualize Images ----------
+print("\n===== Visualizing Sample Images =====")
+
+num_images_to_show = 4
+
+plt.figure(figsize=(10, 5))
+
+for i in range(num_images_to_show):
+    image_tensor = images[i]
+    image_np = image_tensor.permute(1, 2, 0).numpy() * 255
+    image_np = image_np.astype(np.uint8)
+
+    label = labels[i].item()
+
+    plt.subplot(1, num_images_to_show, i + 1)
+    plt.imshow(image_np)
+    plt.title(f"Label: {label}")
+    plt.axis("off")
+
+plt.tight_layout()
+plt.show()
+
+print("\n✅ Project Completed Successfully!")
